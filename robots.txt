@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bradesconsul.com/sitemap.xml
+Sitemap: https://bradesconsul.com.br/sitemap.xml
