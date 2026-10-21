@@ -876,7 +876,7 @@ if (simulationForm) {
         event.preventDefault();
         const data = new FormData(simulationForm);
         const message = `Olá, gostaria de solicitar uma simulação pela Bradescon Sul.\n\nCategoria: ${categoryLabels[data.get('categoria')]}\nCrédito desejado: ${data.get('credito')}\nNome: ${data.get('nome')}\nWhatsApp: ${data.get('whatsapp')}\nE-mail: ${data.get('email')}\nCidade/UF: ${data.get('cidade') || 'Não informado'}`;
-        window.location.href = `https://wa.me/555180886484?text=${encodeURIComponent(message)}`;
+        window.location.href = `https://wa.me/5551980886484?text=${encodeURIComponent(message)}`;
     });
 }
 
