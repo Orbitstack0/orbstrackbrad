@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'bradescon-';
-const CACHE_NAME = `${CACHE_PREFIX}v4`;
+const CACHE_NAME = `${CACHE_PREFIX}v7`;
 
 const CORE_URLS = [
     '/',
