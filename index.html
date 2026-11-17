@@ -62,7 +62,7 @@
     <link rel="manifest" href="/manifest.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -76,12 +76,17 @@
                     <li><a href="/" aria-current="page">Início</a></li>
                     <li><a href="/quem-somos/">Quem Somos</a></li>
                     <li><a href="/servicos/">Soluções</a></li>
-                    <li><a href="#como-funciona">Como Funciona</a></li>
                     <li><a href="/simulacao/">Simulação</a></li>
-                    <li><a href="#conquistas">Contemplados</a></li>
                     <li><a href="#contato">Contato</a></li>
                 </ul>
             </nav>
+
+            <div class="header-actions">
+                <a href="https://wa.me/5551920047002" class="btn btn-header-specialist" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    <span>Fale com um Especialista</span>
+                </a>
+            </div>
 
             <!-- Mobile Menu Toggle -->
             <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMobile">
@@ -97,9 +102,7 @@
                 <li><a href="/" aria-current="page">Início</a></li>
                 <li><a href="/quem-somos/">Quem Somos</a></li>
                 <li><a href="/servicos/">Soluções</a></li>
-                <li><a href="#como-funciona">Como Funciona</a></li>
                 <li><a href="/simulacao/">Simulação</a></li>
-                <li><a href="#conquistas">Contemplados</a></li>
                 <li><a href="#contato">Contato</a></li>
                 <li><a href="https://wa.me/5551920047002" class="btn btn-whatsapp-mobile" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a></li>
             </ul>
@@ -108,127 +111,233 @@
 
     <main>
     <!-- HERO SECTION -->
-    <section class="hero" id="inicio">
+    <section class="hero hero-v2" id="inicio">
         <div class="hero-background" aria-hidden="true">
-            <img src="/images/imagem%20do%20fundo%20novo.png" width="1000" height="667" alt="" loading="eager" fetchpriority="high" decoding="async">
+            <img src="/images/hero-pexels-villa-pool.jpg" width="2600" height="1300" alt="" loading="eager" fetchpriority="high" decoding="async">
         </div>
         <div class="hero-overlay"></div>
-        <svg class="hero-deco" viewBox="0 0 1600 1000" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        
+        <!-- Decorative golden ambient wave from reference -->
+        <svg class="hero-gold-glow-curve" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true" focusable="false">
             <defs>
-                <linearGradient id="heroDecoFade" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#d8b77a" stop-opacity=".55"/>
-                    <stop offset="55%" stop-color="#d8b77a" stop-opacity=".28"/>
-                    <stop offset="100%" stop-color="#d8b77a" stop-opacity="0"/>
+                <linearGradient id="glowCurveGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#DA9F45" stop-opacity="0.95"/>
+                    <stop offset="30%" stop-color="#FAD584" stop-opacity="0.85"/>
+                    <stop offset="60%" stop-color="#F0BB5B" stop-opacity="0.5"/>
+                    <stop offset="100%" stop-color="#FAD584" stop-opacity="0"/>
                 </linearGradient>
-                <linearGradient id="heroDecoFadeSoft" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#d8b77a" stop-opacity=".2"/>
-                    <stop offset="55%" stop-color="#d8b77a" stop-opacity=".1"/>
-                    <stop offset="100%" stop-color="#d8b77a" stop-opacity="0"/>
-                </linearGradient>
+                <filter id="goldGlowBlur" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="7" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
             </defs>
-            <path class="hero-deco-main" d="M32 130 L32 868 C32 900 86 921 172 931 C 366 953 610 942 890 908" fill="none" stroke="url(#heroDecoFade)" stroke-width="1.2"/>
-            <path class="hero-deco-aux" d="M32 868 C 40 910 122 934 246 946 C 440 964 660 954 900 922" fill="none" stroke="url(#heroDecoFadeSoft)" stroke-width="1"/>
+            <path d="M -50 220 C 180 280, 420 295, 680 250 C 860 215, 1020 170, 1180 120" fill="none" stroke="url(#glowCurveGrad)" stroke-width="3" filter="url(#goldGlowBlur)"/>
+            <path d="M -30 230 C 190 288, 430 300, 680 258 C 860 222, 1020 178, 1180 128" fill="none" stroke="rgba(250,213,132,0.55)" stroke-width="1.3"/>
         </svg>
+
         <div class="container hero-content">
-            <div class="hero-text">
-                <p class="hero-eyebrow hero-step hero-step-1">BRADESCON SUL INVESTIMENTOS</p>
-                <h1 class="hero-headline">
-                    <span class="hero-line hero-step hero-step-2">Transformamos seus</span>
-                    <span class="hero-line hero-step hero-step-3">objetivos em</span>
-                    <span class="hero-line hero-step hero-step-4"><span class="highlight-gold">conquistas reais</span></span>
-                </h1>
-                <p class="hero-subheadline hero-step hero-step-5">
-                    Soluções inteligentes em consórcios com segurança, transparência e estratégia.
-                </p>
+            <div class="hero-main-row">
+                <div class="hero-text">
+                    <p class="hero-eyebrow hero-step hero-step-1">BRADESCON SUL INVESTIMENTOS</p>
+                    <h1 class="hero-headline">
+                        <span class="hero-line hero-step hero-step-2">Grandes conquistas</span>
+                        <span class="hero-line hero-step hero-step-3">começam com</span>
+                        <span class="hero-line hero-step hero-step-4"><span class="highlight-gold">boas escolhas.</span></span>
+                    </h1>
+                    <p class="hero-subheadline hero-step hero-step-5">
+                        Soluções em consórcios para quem deseja construir patrimônio, realizar projetos e planejar o futuro com segurança, estratégia e acompanhamento especializado.
+                    </p>
 
-                <div class="hero-ctas">
-                    <a href="/simulacao/" class="btn btn-primary hero-step hero-step-6"><span>Fazer Simulação</span></a>
-                    <a href="#contato" class="btn btn-secondary hero-step hero-step-7"><span>Falar com Especialista</span></a>
-                </div>
-            </div>
-        </div>
-    </section>
+                    <div class="hero-ctas">
+                        <a href="/simulacao/" class="btn btn-hero-gold hero-step hero-step-6"><span>Simular meu consórcio</span> <span class="btn-arrow" aria-hidden="true">↗</span></a>
+                        <a href="/servicos/" class="btn btn-hero-ghost hero-step hero-step-7"><span>Conheça nossas soluções</span></a>
+                    </div>
 
-    <!-- CREDIBILITY SECTION -->
-    <section class="credibility">
-        <div class="container">
-            <div class="credibility-grid">
-                <div class="credibility-item">
-                    <span class="credibility-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3.5 2"></path></svg>
-                    </span>
-                    <div class="credibility-number" data-count-to="30" data-suffix="+">0+</div>
-                    <div class="credibility-label">Anos de experiência</div>
+                    <div class="hero-indicators-bar" aria-label="Diferenciais da Bradescon Sul">
+                        <div class="hero-indicator-item">
+                            <div class="hero-ind-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    <circle cx="8" cy="14" r="1" fill="currentColor"></circle>
+                                    <circle cx="12" cy="14" r="1" fill="currentColor"></circle>
+                                    <circle cx="16" cy="14" r="1" fill="currentColor"></circle>
+                                    <circle cx="8" cy="18" r="1" fill="currentColor"></circle>
+                                    <circle cx="12" cy="18" r="1" fill="currentColor"></circle>
+                                </svg>
+                            </div>
+                            <div class="hero-ind-meta">
+                                <span class="hero-ind-num">30+</span>
+                                <span class="hero-ind-text">Anos de experiência</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-ind-divider" aria-hidden="true"></div>
+
+                        <div class="hero-indicator-item">
+                            <div class="hero-ind-icon hero-ind-icon-map" aria-hidden="true">
+                                <img src="/images/brasil-mapa.svg" alt="" width="28" height="29" loading="eager" decoding="async">
+                            </div>
+                            <div class="hero-ind-meta">
+                                <span class="hero-ind-label-primary">Atuação nacional</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-ind-divider" aria-hidden="true"></div>
+
+                        <div class="hero-indicator-item">
+                            <div class="hero-ind-icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="m11 17 2 2a1 1 0 1 0 3-3"></path>
+                                    <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"></path>
+                                    <path d="m21 3 1 11h-2"></path>
+                                    <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"></path>
+                                    <path d="M3 4h8"></path>
+                                </svg>
+                            </div>
+                            <div class="hero-ind-meta">
+                                <span class="hero-ind-label-primary">Atendimento consultivo</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="credibility-item">
-                    <span class="credibility-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3.5 19c.6-3.4 3-5.2 5.5-5.2s4.9 1.8 5.5 5.2"></path><circle cx="17" cy="9" r="2.6"></circle><path d="M15.3 13.6c2 .2 3.6 1.8 4.2 5"></path></svg>
-                    </span>
-                    <div class="credibility-number credibility-number-static">Desde 2000</div>
-                    <div class="credibility-label">Solidez e experiência</div>
-                </div>
-                <div class="credibility-item">
-                    <span class="credibility-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.5 3.8 5.8 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.8-3.8-9S9.5 5.5 12 3Z"></path></svg>
-                    </span>
-                    <div class="credibility-number credibility-number-static">Atuação Nacional</div>
-                    <div class="credibility-label">Brasil</div>
-                </div>
-                <div class="credibility-item">
-                    <span class="credibility-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.4 5.9.7-4.3 4.1 1.1 5.9-5.3-2.9-5.3 2.9 1.1-5.9-4.3-4.1 5.9-.7Z"></path></svg>
-                    </span>
-                    <div class="credibility-number credibility-number-static">Atendimento</div>
-                    <div class="credibility-label">Consultivo</div>
-                </div>
+
+                <aside class="hero-simulator-card" aria-labelledby="hero-simulator-title">
+                    <form class="hero-quick-form" id="heroQuickSimulator" action="/simulacao/" method="get">
+                        <header class="hero-simulator-head">
+                            <h2 id="hero-simulator-title">Planeje sua próxima conquista.</h2>
+                            <p>Comece sua simulação em poucos segundos.</p>
+                        </header>
+
+                        <label class="hero-simulator-field">
+                            <span>Tipo de consórcio</span>
+                            <select name="categoria" id="heroQuickCategory" required>
+                                <option value="imoveis">Imóveis</option>
+                                <option value="veiculos">Veículos</option>
+                                <option value="pesados">Pesados</option>
+                                <option value="agro">Agro</option>
+                            </select>
+                        </label>
+
+                        <fieldset class="hero-simulator-mode">
+                            <legend>Simular por</legend>
+                            <div class="hero-mode-options">
+                                <label>
+                                    <input type="radio" name="modalidade" value="parcela" checked>
+                                    <span>Parcela</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="modalidade" value="credito">
+                                    <span>Crédito</span>
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <label class="hero-simulator-field">
+                            <span id="heroQuickValueLabel">Valor da parcela</span>
+                            <input name="valor" id="heroQuickValue" type="text" inputmode="numeric" value="R$ 2.500,00" autocomplete="off" required>
+                        </label>
+
+                        <div class="hero-slider-wrap">
+                            <input id="heroQuickRange" type="range" min="300" max="20000" step="100" value="2500" aria-labelledby="heroQuickValueLabel">
+                            <div class="hero-slider-limits" aria-hidden="true">
+                                <span id="heroQuickMin">R$ 300,00</span>
+                                <span id="heroQuickMax">R$ 20.000,00</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="hero-simulator-submit">
+                            <span>Simular meu consórcio</span><span aria-hidden="true">→</span>
+                        </button>
+                        <p class="hero-simulator-note">Você poderá revisar os dados antes de enviar.</p>
+                    </form>
+                </aside>
             </div>
         </div>
     </section>
 
     <!-- QUEM SOMOS SECTION -->
     <section class="about" id="quem-somos" aria-labelledby="about-title">
-        <div class="container about-grid">
-            <div class="about-text">
-                <p class="about-eyebrow about-animate">QUEM SOMOS</p>
-                <h2 class="about-title about-animate" id="about-title">Estratégia para transformar planos em patrimônio.</h2>
-                <div class="about-copy about-animate">
-                    <p>
-                        A Bradescon Sul Investimentos tem uma trajetória construída desde 2000, trazendo consigo mais de 30 anos de experiência
-                        no mercado de consórcios. Unimos conhecimento, relacionamento e visão estratégica para
-                        oferecer soluções personalizadas e atender clientes em todo o Brasil.
-                    </p>
-                    <p>
-                        Entendemos que cada cliente possui objetivos diferentes. Por isso, trabalhamos de forma
-                        consultiva na busca por soluções adequadas para aquisição de imóveis, veículos,
-                        equipamentos e construção de patrimônio.
+        <div class="container about-container">
+            <!-- Header Editorial Superior -->
+            <div class="about-header">
+                <div class="about-header-meta">
+                    <p class="about-eyebrow about-animate">SOBRE A BRADESCON SUL</p>
+                    <h2 class="about-title about-animate" id="about-title">
+                        Experiência que inspira confiança.<br class="about-br-desktop">
+                        <span class="about-title-highlight">Estratégia que transforma planos.</span>
+                    </h2>
+                </div>
+                <div class="about-header-summary about-animate">
+                    <p class="about-lead">
+                        Unimos três décadas de conhecimento especializado no mercado de consórcios a uma visão estratégica, 
+                        orientando decisões patrimoniais sólidas e sob medida para cada momento de vida.
                     </p>
                 </div>
-                <a href="/quem-somos/" class="about-link about-animate">Conheça a Bradescon Sul <span aria-hidden="true">→</span></a>
             </div>
-            <div class="about-visual about-animate-x">
-                <div class="about-panel">
-                    <div class="about-visual-frame">
-                        <img src="/images/quem-somos-nos.webp" width="1448" height="1086" loading="lazy" decoding="async" alt="Profissionais reunidos durante uma conversa de planejamento">
+
+            <!-- Composição Editorial Assimétrica -->
+            <div class="about-showcase">
+                <!-- Coluna Visual Protagonista -->
+                <div class="about-visual-column about-animate">
+                    <div class="about-photo-wrapper">
+                        <img 
+                            src="/images/quem-somos-consultoria.webp" 
+                            width="1600" 
+                            height="2000" 
+                            loading="lazy" 
+                            decoding="async" 
+                            alt="Consultoria estratégica e atendimento consultivo da Bradescon Sul Investimentos"
+                            class="about-photo"
+                        >
                     </div>
-                    <div class="about-panel-footer">
-                        <span class="about-visual-caption">BRADESCON SUL INVESTIMENTOS</span>
-                        <div class="about-national">
-                            <span class="about-national-icon" aria-hidden="true">
-                                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17 5.5L25 7L29.5 11L36 12.5L39.5 19L35.5 23L36.5 29.5L31.5 32L29 39.5L23.5 43L20 36.5L15.5 33L13.5 27L8.5 23L11 17L8.5 12L14 10.5L17 5.5Z"/>
-                                    <path d="M18 16L22 19L27 17M22 19L20 25L25 29"/>
-                                </svg>
-                            </span>
-                            <span class="about-national-copy">
-                                <strong>ATUAÇÃO NACIONAL</strong>
-                                <span>Presença em todo o Brasil para estar onde você estiver.</span>
-                            </span>
+                </div>
+
+                <!-- Coluna de Conteúdo & Indicadores Integrados -->
+                <div class="about-content-column">
+                    <div class="about-narrative about-animate">
+                        <p>
+                            Desde 2000 como organização e respaldada por mais de 30 anos de bagagem profissional de seus fundadores, 
+                            a Bradescon Sul atua com transparência, independência e acompanhamento próximo em consórcios para imóveis, veículos, pesados e agronegócio.
+                        </p>
+                    </div>
+
+                    <!-- Indicadores Institucionais Editoriais -->
+                    <div class="about-indicators-matrix about-animate">
+                        <div class="about-stat-card">
+                            <span class="about-stat-number">30+</span>
+                            <div class="about-stat-info">
+                                <strong class="about-stat-label">Anos de experiência</strong>
+                                <span class="about-stat-desc">Bagagem técnica e consultiva no mercado financeiro e consórcios.</span>
+                            </div>
+                        </div>
+
+                        <div class="about-stat-card">
+                            <span class="about-stat-number">Desde 2000</span>
+                            <div class="about-stat-info">
+                                <strong class="about-stat-label">Solidez comprovada</strong>
+                                <span class="about-stat-desc">Mais de duas décadas de atuação ética, contínua e dedicada ao cliente.</span>
+                            </div>
+                        </div>
+
+                        <div class="about-stat-card">
+                            <span class="about-stat-number">Nacional</span>
+                            <div class="about-stat-info">
+                                <strong class="about-stat-label">Atuação no Brasil</strong>
+                                <span class="about-stat-desc">Atendimento consultivo e estruturado em qualquer região do país.</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="about-visual-badge">
-                    <span class="about-visual-badge-number">30+</span>
-                    <span class="about-visual-badge-label">Anos de<br>Experiência</span>
+
+                    <!-- Rodapé da Seção com CTA Editorial -->
+                    <div class="about-action-wrap about-animate">
+                        <a href="/quem-somos/" class="about-cta-btn">
+                            <span>Conheça nossa trajetória</span>
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -243,13 +352,12 @@
                 <p class="solucoes-subtitle solucoes-animate">Cada objetivo pede um caminho diferente. Conheça as frentes em que a Bradescon Sul atua.</p>
             </div>
 
-            <div class="solucoes-grid">
+            <div class="solucoes-grid" id="solucoesGrid">
                 <!-- Imóveis -->
                 <a class="solucao-panel solucoes-animate" href="/servicos/#imoveis" style="transition-delay:.05s">
                     <div class="solucao-panel-image">
                         <img src="/images/solucao-imoveis.webp" width="1290" height="860" alt="Soluções de Imóveis" loading="lazy">
                     </div>
-                    <span class="solucao-panel-indicator" aria-hidden="true">↗</span>
                     <div class="solucao-panel-content">
                         <p class="solucao-panel-category">01 / Patrimônio</p>
                         <h3>Imóveis</h3>
@@ -263,7 +371,6 @@
                     <div class="solucao-panel-image">
                         <img src="/images/solucao-veiculos-leves.webp" width="1290" height="860" alt="Soluções de Veículos" loading="lazy">
                     </div>
-                    <span class="solucao-panel-indicator" aria-hidden="true">↗</span>
                     <div class="solucao-panel-content">
                         <p class="solucao-panel-category">02 / Mobilidade</p>
                         <h3>Veículos</h3>
@@ -277,7 +384,6 @@
                     <div class="solucao-panel-image">
                         <img src="/images/solucao-veiculos-pesados.webp" width="1094" height="504" alt="Soluções para Pesados" loading="lazy">
                     </div>
-                    <span class="solucao-panel-indicator" aria-hidden="true">↗</span>
                     <div class="solucao-panel-content">
                         <p class="solucao-panel-category">03 / Negócios</p>
                         <h3>Pesados</h3>
@@ -291,7 +397,6 @@
                     <div class="solucao-panel-image">
                         <img src="/images/solucao-agricolas.webp" width="1128" height="750" alt="Máquinas Agrícolas" loading="lazy">
                     </div>
-                    <span class="solucao-panel-indicator" aria-hidden="true">↗</span>
                     <div class="solucao-panel-content">
                         <p class="solucao-panel-category">04 / Agronegócio</p>
                         <h3>Máquinas Agrícolas</h3>
@@ -300,6 +405,7 @@
                     </div>
                 </a>
             </div>
+            <div class="mobile-carousel-dots mobile-carousel-dots--on-dark" data-dots-for="solucoesGrid" role="tablist" aria-label="Selecionar solução"></div>
             <div class="section-action"><a href="/servicos/" class="btn btn-secondary solucoes-btn">Ver todas as soluções</a></div>
         </div>
     </section>
@@ -313,39 +419,76 @@
                 <p class="process-intro process-animate">Cada etapa transforma intenção em uma estratégia clara para avançar com segurança.</p>
             </header>
 
-            <ol class="process-journey" aria-label="Etapas do planejamento Bradescon Sul">
-                <li class="process-step process-animate">
-                    <div class="process-marker" aria-hidden="true"><span>01</span></div>
-                    <div class="process-copy">
-                        <h3>Escolha seu objetivo</h3>
-                        <p>Identifique o que você quer conquistar: imóvel, veículo, equipamento ou capital para seu negócio.</p>
-                    </div>
-                </li>
+            <div class="process-carousel" id="processCarousel" role="region" aria-roledescription="carrossel" aria-label="Etapas do planejamento Bradescon Sul">
+                <div class="process-carousel-stage">
+                    <ul class="process-carousel-track">
+                        <li class="process-card" role="group" aria-roledescription="slide" aria-label="Etapa 1 de 4" data-index="0">
+                            <div class="process-card-head">
+                                <span class="process-step-num" aria-hidden="true">01</span>
+                                <div class="process-marker" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="4.3"></circle><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"></circle></svg>
+                                </div>
+                            </div>
+                            <div class="process-copy">
+                                <h3>Escolha seu objetivo</h3>
+                                <p>Identifique o que você quer conquistar: imóvel, veículo, equipamento ou capital para seu negócio.</p>
+                            </div>
+                        </li>
+                        <li class="process-card" role="group" aria-roledescription="slide" aria-label="Etapa 2 de 4" data-index="1">
+                            <div class="process-card-head">
+                                <span class="process-step-num" aria-hidden="true">02</span>
+                                <div class="process-marker" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="2"></rect><path d="M2.5 10h19"></path><path d="M6 14.5h4"></path></svg>
+                                </div>
+                            </div>
+                            <div class="process-copy">
+                                <h3>Defina o crédito</h3>
+                                <p>Junto com nossos especialistas, defina o valor e as condições ideais para sua necessidade.</p>
+                            </div>
+                        </li>
+                        <li class="process-card" role="group" aria-roledescription="slide" aria-label="Etapa 3 de 4" data-index="2">
+                            <div class="process-card-head">
+                                <span class="process-step-num" aria-hidden="true">03</span>
+                                <div class="process-marker" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>
+                                </div>
+                            </div>
+                            <div class="process-copy">
+                                <h3>Planeje sua estratégia</h3>
+                                <p>Desenvolvemos um plano personalizado de pagamentos e contemplação adaptado ao seu cenário.</p>
+                            </div>
+                        </li>
+                        <li class="process-card" role="group" aria-roledescription="slide" aria-label="Etapa 4 de 4" data-index="3">
+                            <div class="process-card-head">
+                                <span class="process-step-num" aria-hidden="true">04</span>
+                                <div class="process-marker" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8v3a4 4 0 0 1-4 4 4 4 0 0 1-4-4V4z"></path><path d="M8 5H5a2 2 0 0 0 0 4h1.2"></path><path d="M16 5h3a2 2 0 0 1 0 4h-1.2"></path><path d="M12 11v3"></path><path d="M9 20h6"></path><path d="M10 17h4v3h-4z"></path></svg>
+                                </div>
+                            </div>
+                            <div class="process-copy">
+                                <h3>Conquiste seu objetivo</h3>
+                                <p>Com planejamento sólido, você realiza seu sonho e constrói patrimônio de forma estratégica.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
-                <li class="process-step process-animate">
-                    <div class="process-marker" aria-hidden="true"><span>02</span></div>
-                    <div class="process-copy">
-                        <h3>Defina o crédito</h3>
-                        <p>Junto com nossos especialistas, defina o valor e as condições ideais para sua necessidade.</p>
+                <div class="process-carousel-controls">
+                    <button type="button" class="process-carousel-arrow process-carousel-prev" aria-label="Etapa anterior">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+                    </button>
+                    <div class="process-carousel-dots" role="tablist" aria-label="Selecionar etapa">
+                        <button type="button" class="process-carousel-dot" role="tab" aria-label="Ir para etapa 1" data-go="0"></button>
+                        <button type="button" class="process-carousel-dot" role="tab" aria-label="Ir para etapa 2" data-go="1"></button>
+                        <button type="button" class="process-carousel-dot" role="tab" aria-label="Ir para etapa 3" data-go="2"></button>
+                        <button type="button" class="process-carousel-dot" role="tab" aria-label="Ir para etapa 4" data-go="3"></button>
                     </div>
-                </li>
-
-                <li class="process-step process-animate">
-                    <div class="process-marker" aria-hidden="true"><span>03</span></div>
-                    <div class="process-copy">
-                        <h3>Planeje sua estratégia</h3>
-                        <p>Desenvolvemos um plano personalizado de pagamentos e contemplação adaptado ao seu cenário.</p>
-                    </div>
-                </li>
-
-                <li class="process-step process-animate">
-                    <div class="process-marker" aria-hidden="true"><span>04</span></div>
-                    <div class="process-copy">
-                        <h3>Conquiste seu objetivo</h3>
-                        <p>Com planejamento sólido, você realiza seu sonho e constrói patrimônio de forma estratégica.</p>
-                    </div>
-                </li>
-            </ol>
+                    <button type="button" class="process-carousel-arrow process-carousel-next" aria-label="Próxima etapa">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+                    </button>
+                </div>
+                <p class="process-carousel-status visually-hidden" aria-live="polite"></p>
+            </div>
         </div>
     </section>
 
@@ -359,7 +502,7 @@
                 <p class="diff-intro diff-animate">Soluções inteligentes e flexíveis para transformar seus planos em conquistas reais.</p>
             </header>
 
-            <ol class="diff-grid" aria-label="Diferenciais Bradescon Sul">
+            <ol class="diff-grid" id="diffGrid" aria-label="Diferenciais Bradescon Sul">
                 <li class="diff-card diff-card-calendar diff-animate" style="--diff-delay: .22s">
                     <div class="diff-icon" aria-hidden="true">
                         <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -434,6 +577,7 @@
                     <h3>Parcelamento<br>sem juros</h3>
                 </li>
             </ol>
+            <div class="mobile-carousel-dots mobile-carousel-dots--on-dark" data-dots-for="diffGrid" role="tablist" aria-label="Selecionar diferencial"></div>
         </div>
     </section>
 
@@ -446,7 +590,7 @@
                 <p class="conquistas-subtitle conquistas-animate">Conheça quatro histórias sobre escolhas planejadas e objetivos construídos com organização.</p>
             </header>
 
-            <div class="conquistas-grid">
+            <div class="conquistas-grid" id="conquistasGrid">
                 <!-- Exemplo ilustrativo: Imóvel -->
                 <button type="button" class="conquista-panel conquista-featured conquistas-animate contemplado-trigger" data-contemplado="imovel" aria-haspopup="dialog" aria-controls="contemplado-modal" aria-label="Abrir história de Lucas Ferreira e Amanda Ribeiro" style="transition-delay:.05s">
                     <div class="conquista-image">
@@ -499,6 +643,7 @@
                     </div>
                 </button>
             </div>
+            <div class="mobile-carousel-dots" data-dots-for="conquistasGrid" role="tablist" aria-label="Selecionar contemplado"></div>
         </div>
     </section>
 

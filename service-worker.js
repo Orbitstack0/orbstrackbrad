@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'bradescon-';
-const CACHE_NAME = `${CACHE_PREFIX}v7`;
+const CACHE_NAME = `${CACHE_PREFIX}v30`;
 
 const CORE_URLS = [
     '/',
@@ -18,6 +18,10 @@ const IMAGE_URLS = [
     '/images/sigla-bradescon-512.png',
     '/images/bradesconsul%20logo%20grande.png',
     '/images/imagem%20do%20fundo%20novo.png',
+    '/images/hero-v2.jpg',
+    '/images/brasil-mapa.svg',
+    '/images/logo%20hero%20atualizado.png',
+    '/images/quem-somos-consultoria.webp',
     '/images/quem-somos-nos.webp',
     '/images/solucao-imoveis.webp',
     '/images/solucao-veiculos-leves.webp',

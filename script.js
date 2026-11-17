@@ -86,6 +86,96 @@ const IS_HOME = normalizeHomePath(window.location.pathname) === '/'
 })();
 
 // ============================================
+// SIMULADOR RÁPIDO VERTICAL DO HERO
+// ============================================
+(function() {
+    const form = document.getElementById('heroQuickSimulator');
+    if (!form) return;
+
+    const valueField = document.getElementById('heroQuickValue');
+    const valueLabel = document.getElementById('heroQuickValueLabel');
+    const range = document.getElementById('heroQuickRange');
+    const minLabel = document.getElementById('heroQuickMin');
+    const maxLabel = document.getElementById('heroQuickMax');
+    const modeFields = [...form.querySelectorAll('input[name="modalidade"]')];
+    const floatingWhatsApp = document.querySelector('.whatsapp-floating');
+    const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+    const modeConfig = {
+        parcela: { label: 'Valor da parcela', min: 300, max: 20000, step: 100, initial: 2500 },
+        credito: { label: 'Valor do crédito', min: 20000, max: 2000000, step: 10000, initial: 250000 }
+    };
+
+    function numberFromCurrency(value) {
+        const digits = String(value).replace(/\D/g, '');
+        return digits ? Number(digits) / 100 : 0;
+    }
+
+    function formatCurrency(value) {
+        return currency.format(Number(value) || 0);
+    }
+
+    function updateRangeFill() {
+        const min = Number(range.min);
+        const max = Number(range.max);
+        const percent = ((Number(range.value) - min) / (max - min)) * 100;
+        range.style.setProperty('--range-progress', `${Math.max(0, Math.min(100, percent))}%`);
+    }
+
+    function applyMode(mode) {
+        const config = modeConfig[mode];
+        valueLabel.textContent = config.label;
+        range.min = String(config.min);
+        range.max = String(config.max);
+        range.step = String(config.step);
+        range.value = String(config.initial);
+        valueField.value = formatCurrency(config.initial);
+        valueField.setCustomValidity('');
+        minLabel.textContent = formatCurrency(config.min);
+        maxLabel.textContent = formatCurrency(config.max);
+        updateRangeFill();
+    }
+
+    modeFields.forEach(field => field.addEventListener('change', () => applyMode(field.value)));
+
+    range.addEventListener('input', () => {
+        valueField.value = formatCurrency(range.value);
+        valueField.setCustomValidity('');
+        updateRangeFill();
+    });
+
+    valueField.addEventListener('input', () => {
+        const digits = valueField.value.replace(/\D/g, '').slice(0, 12);
+        const amount = digits ? Number(digits) / 100 : 0;
+        valueField.value = digits ? formatCurrency(amount) : '';
+        range.value = String(Math.max(Number(range.min), Math.min(Number(range.max), amount)));
+        valueField.setCustomValidity('');
+        updateRangeFill();
+    });
+
+    form.addEventListener('submit', event => {
+        const amount = numberFromCurrency(valueField.value);
+        const min = Number(range.min);
+        const max = Number(range.max);
+        const valid = amount >= min && amount <= max;
+        valueField.setCustomValidity(valid ? '' : `Informe um valor entre ${formatCurrency(min)} e ${formatCurrency(max)}.`);
+        if (!valid) {
+            event.preventDefault();
+            valueField.reportValidity();
+            valueField.focus();
+        }
+    });
+
+    if (floatingWhatsApp && 'IntersectionObserver' in window) {
+        const formObserver = new IntersectionObserver(entries => {
+            floatingWhatsApp.classList.toggle('is-suppressed', entries[0].isIntersecting);
+        }, { threshold: 0.15 });
+        formObserver.observe(form);
+    }
+
+    applyMode('parcela');
+})();
+
+// ============================================
 // HEADER SCROLL EFFECT
 // ============================================
 const header = document.getElementById('header');
@@ -496,11 +586,10 @@ if (solucoesAnimated.length && 'IntersectionObserver' in window) {
 }
 
 // ============================================
-// COMO FUNCIONA — PROGRESSIVE JOURNEY
+// COMO FUNCIONA — HEADER REVEAL
 // ============================================
-const processJourney = document.querySelector('.process-journey');
 const processAnimated = document.querySelectorAll('.process-animate');
-if ((processJourney || processAnimated.length) && 'IntersectionObserver' in window) {
+if (processAnimated.length && 'IntersectionObserver' in window) {
     const processObserver = new IntersectionObserver(function (entries) {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -510,12 +599,302 @@ if ((processJourney || processAnimated.length) && 'IntersectionObserver' in wind
         });
     }, { threshold: 0.16 });
 
-    if (processJourney) processObserver.observe(processJourney);
     processAnimated.forEach(el => processObserver.observe(el));
 } else {
-    if (processJourney) processJourney.classList.add('in-view');
     processAnimated.forEach(el => el.classList.add('in-view'));
 }
+
+// ============================================
+// COMO FUNCIONA — HORIZONTAL PREMIUM CAROUSEL
+// ============================================
+(function () {
+    const carousel = document.getElementById('processCarousel');
+    if (!carousel) return;
+
+    const stage = carousel.querySelector('.process-carousel-stage');
+    const track = carousel.querySelector('.process-carousel-track');
+    const prevBtn = carousel.querySelector('.process-carousel-prev');
+    const nextBtn = carousel.querySelector('.process-carousel-next');
+    const dots = Array.from(carousel.querySelectorAll('.process-carousel-dot'));
+    const status = carousel.querySelector('.process-carousel-status');
+
+    if (!stage || !track) return;
+
+    const origCards = Array.from(track.querySelectorAll('.process-card'));
+    const totalOrig = origCards.length;
+    if (totalOrig === 0) return;
+
+    // Clone sets for seamless infinite loop:
+    // We clone 1 set before and 1 set after, giving 3 sets (total 12 cards).
+    // Original cards start at index 4 (0 to 3 before, 4 to 7 middle, 8 to 11 after).
+    origCards.forEach(c => {
+        const cloneBefore = c.cloneNode(true);
+        cloneBefore.setAttribute('aria-hidden', 'true');
+        cloneBefore.classList.add('is-clone');
+        track.insertBefore(cloneBefore, origCards[0]);
+
+        const cloneAfter = c.cloneNode(true);
+        cloneAfter.setAttribute('aria-hidden', 'true');
+        cloneAfter.classList.add('is-clone');
+        track.appendChild(cloneAfter);
+    });
+
+    let allCards = Array.from(track.querySelectorAll('.process-card'));
+    let currentIndex = totalOrig; // start at 4 (first card of middle set)
+    let isTransitioning = false;
+    let autoplayTimer = null;
+    let isPaused = false;
+
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let reducedMotion = reducedMotionQuery.matches;
+    if (typeof reducedMotionQuery.addEventListener === 'function') {
+        reducedMotionQuery.addEventListener('change', e => {
+            reducedMotion = e.matches;
+            if (reducedMotion) stopAutoplay(); else startAutoplay();
+        });
+    }
+
+    function getMetrics() {
+        const cardWidth = allCards[0].offsetWidth;
+        const style = window.getComputedStyle(track);
+        const gap = parseFloat(style.columnGap || style.gap) || 24;
+        return { cardWidth, gap, step: cardWidth + gap };
+    }
+
+    function updatePosition(animate = true) {
+        const { cardWidth, step } = getMetrics();
+        const stageWidth = stage.clientWidth;
+        // Center the active card in the stage
+        const targetX = (stageWidth - cardWidth) / 2 - (currentIndex * step);
+
+        if (animate && !reducedMotion) {
+            track.style.transition = 'transform 800ms cubic-bezier(0.25, 1, 0.5, 1)';
+        } else {
+            track.style.transition = 'none';
+        }
+        track.style.transform = 'translate3d(' + targetX + 'px, 0, 0)';
+
+        // Update active classes
+        allCards.forEach((c, idx) => {
+            if (idx === currentIndex) {
+                c.classList.add('is-active');
+                c.setAttribute('aria-hidden', 'false');
+            } else {
+                c.classList.remove('is-active');
+                c.setAttribute('aria-hidden', 'true');
+            }
+        });
+
+        // Update dots
+        const realIndex = ((currentIndex % totalOrig) + totalOrig) % totalOrig;
+        dots.forEach((dot, i) => {
+            dot.setAttribute('aria-selected', i === realIndex ? 'true' : 'false');
+        });
+
+        // Update accessibility status
+        if (status) {
+            const activeCard = allCards[currentIndex];
+            const title = activeCard ? activeCard.querySelector('h3') : null;
+            status.textContent = 'Etapa ' + (realIndex + 1) + ' de ' + totalOrig + (title ? ': ' + title.textContent : '');
+        }
+    }
+
+    // Handle seamless wrapping when transition completes
+    track.addEventListener('transitionend', (e) => {
+        if (e.target !== track) return;
+        isTransitioning = false;
+        if (currentIndex >= totalOrig * 2) {
+            currentIndex -= totalOrig;
+            updatePosition(false);
+        } else if (currentIndex < totalOrig) {
+            currentIndex += totalOrig;
+            updatePosition(false);
+        }
+    });
+
+    function nextSlide() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        currentIndex++;
+        updatePosition(true);
+    }
+
+    function prevSlide() {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        currentIndex--;
+        updatePosition(true);
+    }
+
+    function goToRealIndex(targetRealIndex) {
+        if (isTransitioning) return;
+        const currentReal = ((currentIndex % totalOrig) + totalOrig) % totalOrig;
+        const diff = targetRealIndex - currentReal;
+        if (diff === 0) return;
+        isTransitioning = true;
+        currentIndex += diff;
+        updatePosition(true);
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); restartAutoplay(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); restartAutoplay(); });
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => { goToRealIndex(i); restartAutoplay(); });
+    });
+
+    // Autoplay: 4s interval
+    function startAutoplay() {
+        stopAutoplay();
+        if (reducedMotion) return;
+        autoplayTimer = setInterval(() => {
+            if (!isPaused && !document.hidden) {
+                nextSlide();
+            }
+        }, 4000);
+    }
+
+    function stopAutoplay() {
+        if (autoplayTimer) {
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+        }
+    }
+
+    function restartAutoplay() {
+        stopAutoplay();
+        startAutoplay();
+    }
+
+    // Pause on hover, focus, touch
+    carousel.addEventListener('mouseenter', () => { isPaused = true; });
+    carousel.addEventListener('mouseleave', () => { isPaused = false; });
+    carousel.addEventListener('focusin', () => { isPaused = true; });
+    carousel.addEventListener('focusout', () => { isPaused = false; });
+
+    document.addEventListener('visibilitychange', () => {
+        isPaused = document.hidden;
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isSwiping = false;
+    let gestureLockedHorizontal = false;
+
+    stage.addEventListener('touchstart', e => {
+        if (e.touches.length !== 1) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isSwiping = true;
+        gestureLockedHorizontal = false;
+        isPaused = true;
+    }, { passive: true });
+
+    // Not passive: once horizontal intent is confirmed we call preventDefault()
+    // so the browser's own touch-action:pan-y gesture never steals the sequence
+    // (which otherwise fires touchcancel and leaves the carousel stuck paused).
+    stage.addEventListener('touchmove', e => {
+        if (!isSwiping || e.touches.length !== 1) return;
+        const deltaX = e.touches[0].clientX - touchStartX;
+        const deltaY = e.touches[0].clientY - touchStartY;
+        if (!gestureLockedHorizontal && Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+            gestureLockedHorizontal = true;
+        }
+        if (gestureLockedHorizontal) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    function resetSwipeState() {
+        isSwiping = false;
+        gestureLockedHorizontal = false;
+        isPaused = false;
+    }
+
+    // Safety net: if the browser still claims the gesture (e.g. a diagonal
+    // swipe it reads as a vertical pan), touchend never fires — only
+    // touchcancel does. Without this the carousel would stay paused forever.
+    stage.addEventListener('touchcancel', resetSwipeState, { passive: true });
+
+    stage.addEventListener('touchend', e => {
+        if (!isSwiping) return;
+        const wasHorizontal = gestureLockedHorizontal;
+        resetSwipeState();
+        const deltaX = e.changedTouches[0].clientX - touchStartX;
+        if (wasHorizontal && Math.abs(deltaX) > 35) {
+            if (deltaX < 0) nextSlide(); else prevSlide();
+        }
+        restartAutoplay();
+    }, { passive: true });
+
+    // Handle window resize
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            updatePosition(false);
+        }, 100);
+    });
+
+    // Initial render
+    updatePosition(false);
+    startAutoplay();
+})();
+
+// ============================================
+// MOBILE SCROLL-SNAP CAROUSEL DOTS (shared)
+// Used by Soluções, Diferenciais and Contemplados on mobile, where each
+// grid becomes a native horizontally-scrollable, scroll-snap track (CSS-only
+// swipe — no JS drag logic). This just keeps the dot indicators in sync and
+// lets a dot click scroll the matching card into view. No autoplay here by
+// design — manual swipe only, per spec.
+// ============================================
+function initSnapCarouselDots(trackId) {
+    const track = document.getElementById(trackId);
+    if (!track) return;
+    const dotsContainer = document.querySelector('[data-dots-for="' + trackId + '"]');
+    const items = Array.from(track.children);
+    if (!items.length || !dotsContainer) return;
+
+    const dots = items.map((item, i) => {
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'mobile-carousel-dot';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', 'Ir para item ' + (i + 1) + ' de ' + items.length);
+        dot.addEventListener('click', () => {
+            items[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        });
+        dotsContainer.appendChild(dot);
+        return dot;
+    });
+
+    function updateActiveDot() {
+        const trackRect = track.getBoundingClientRect();
+        if (trackRect.width === 0) return;
+        const center = trackRect.left + trackRect.width / 2;
+        let closestIndex = 0;
+        let closestDist = Infinity;
+        items.forEach((item, i) => {
+            const r = item.getBoundingClientRect();
+            const dist = Math.abs((r.left + r.width / 2) - center);
+            if (dist < closestDist) { closestDist = dist; closestIndex = i; }
+        });
+        dots.forEach((dot, i) => dot.setAttribute('aria-selected', i === closestIndex ? 'true' : 'false'));
+    }
+
+    let rafId = null;
+    track.addEventListener('scroll', () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(updateActiveDot);
+    }, { passive: true });
+
+    window.addEventListener('resize', updateActiveDot);
+    updateActiveDot();
+}
+
+['solucoesGrid', 'diffGrid', 'conquistasGrid'].forEach(initSnapCarouselDots);
 
 // ============================================
 // DIFERENCIAIS — REVEAL ON SCROLL
@@ -832,12 +1211,56 @@ if (simulationForm) {
     const formSteps = [...simulationForm.querySelectorAll('.form-step')];
     const progressSteps = [...simulationForm.querySelectorAll('.progress-step')];
     const status = document.getElementById('formStatus');
+    const queryParams = new URLSearchParams(window.location.search);
+    const modeField = document.getElementById('simulationMode');
+    const valueField = document.getElementById('credito');
+    const valueHeading = document.getElementById('simulation-step-2-title');
+    const valueLabel = simulationForm.querySelector('label[for="credito"]');
     let currentStep = 0;
     const categoryLabels = { imoveis: 'Imóvel', veiculos: 'Veículo', pesados: 'Pesado', agro: 'Máquina Agrícola' };
-    const queryCategory = new URLSearchParams(window.location.search).get('categoria');
+    const modeLabels = { parcela: 'Parcela', credito: 'Crédito' };
+    const queryCategory = queryParams.get('categoria');
+    const queryMode = queryParams.get('modalidade');
+    const queryValue = queryParams.get('valor');
+    const categoryAliases = {
+        'imovel': 'imoveis',
+        'imoveis': 'imoveis',
+        'veiculo': 'veiculos',
+        'veiculos': 'veiculos',
+        'pesado': 'pesados',
+        'pesados': 'pesados',
+        'agro': 'agro'
+    };
+    const resolvedCat = categoryAliases[queryCategory] || queryCategory;
     const selectedCategory = [...simulationForm.querySelectorAll('input[name="categoria"]')]
-        .find(input => input.value === queryCategory);
+        .find(input => input.value === resolvedCat);
     if (selectedCategory) selectedCategory.checked = true;
+
+    const resolvedMode = queryMode === 'parcela' ? 'parcela' : 'credito';
+    modeField.value = resolvedMode;
+    if (resolvedMode === 'parcela') {
+        valueHeading.textContent = 'Quanto você pretende pagar por mês?';
+        valueLabel.textContent = 'Valor aproximado da parcela';
+        valueField.placeholder = 'Ex.: R$ 2.500';
+    }
+
+    function parseQueryCurrency(value) {
+        if (!value) return 0;
+        if (/R\$|,/.test(value)) {
+            const digits = value.replace(/\D/g, '');
+            return digits ? Number(digits) / 100 : 0;
+        }
+        const numeric = Number(value);
+        return Number.isFinite(numeric) ? numeric : 0;
+    }
+
+    const prefilledValue = parseQueryCurrency(queryValue);
+    if (prefilledValue > 0) {
+        valueField.value = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(prefilledValue);
+    }
 
     const phoneField = document.getElementById('whatsapp');
     phoneField.addEventListener('input', () => phoneField.setCustomValidity(''));
@@ -867,7 +1290,9 @@ if (simulationForm) {
         if (!valid) { simulationForm.reportValidity(); return; }
         if (currentStep === 2) {
             const data = new FormData(simulationForm);
-            document.getElementById('reviewBox').innerHTML = `<strong>Categoria:</strong> ${escapeHtml(categoryLabels[data.get('categoria')])}<br><strong>Crédito:</strong> ${escapeHtml(data.get('credito'))}<br><strong>Nome:</strong> ${escapeHtml(data.get('nome'))}<br><strong>WhatsApp:</strong> ${escapeHtml(data.get('whatsapp'))}<br><strong>E-mail:</strong> ${escapeHtml(data.get('email'))}<br><strong>Cidade/UF:</strong> ${escapeHtml(data.get('cidade') || 'Não informado')}`;
+            const mode = data.get('modalidade') === 'parcela' ? 'parcela' : 'credito';
+            const amountLabel = mode === 'parcela' ? 'Parcela desejada' : 'Crédito desejado';
+            document.getElementById('reviewBox').innerHTML = `<strong>Categoria:</strong> ${escapeHtml(categoryLabels[data.get('categoria')])}<br><strong>Simular por:</strong> ${modeLabels[mode]}<br><strong>${amountLabel}:</strong> ${escapeHtml(data.get('credito'))}<br><strong>Nome:</strong> ${escapeHtml(data.get('nome'))}<br><strong>WhatsApp:</strong> ${escapeHtml(data.get('whatsapp'))}<br><strong>E-mail:</strong> ${escapeHtml(data.get('email'))}<br><strong>Cidade/UF:</strong> ${escapeHtml(data.get('cidade') || 'Não informado')}`;
         }
         showStep(Math.min(currentStep + 1, formSteps.length - 1));
     }));
@@ -875,9 +1300,13 @@ if (simulationForm) {
     simulationForm.addEventListener('submit', event => {
         event.preventDefault();
         const data = new FormData(simulationForm);
-        const message = `Olá, gostaria de solicitar uma simulação pela Bradescon Sul.\n\nCategoria: ${categoryLabels[data.get('categoria')]}\nCrédito desejado: ${data.get('credito')}\nNome: ${data.get('nome')}\nWhatsApp: ${data.get('whatsapp')}\nE-mail: ${data.get('email')}\nCidade/UF: ${data.get('cidade') || 'Não informado'}`;
-        window.location.href = `https://wa.me/5551920047002?text=${encodeURIComponent(message)}`;
+        const mode = data.get('modalidade') === 'parcela' ? 'parcela' : 'credito';
+        const amountLabel = mode === 'parcela' ? 'Parcela desejada' : 'Crédito desejado';
+        const message = `Olá, gostaria de solicitar uma simulação pela Bradescon Sul.\n\nCategoria: ${categoryLabels[data.get('categoria')]}\nSimular por: ${modeLabels[mode]}\n${amountLabel}: ${data.get('credito')}\nNome: ${data.get('nome')}\nWhatsApp: ${data.get('whatsapp')}\nE-mail: ${data.get('email')}\nCidade/UF: ${data.get('cidade') || 'Não informado'}`;
+        window.location.href = `https://wa.me/5551980886484?text=${encodeURIComponent(message)}`;
     });
+
+    if (selectedCategory && queryMode && prefilledValue > 0) showStep(2);
 }
 
 if ('serviceWorker' in navigator) {
