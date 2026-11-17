@@ -639,11 +639,13 @@ if (processAnimated.length && 'IntersectionObserver' in window) {
         track.appendChild(cloneAfter);
     });
 
-    let allCards = Array.from(track.querySelectorAll('.process-card'));
+    const allCards = Array.from(track.querySelectorAll('.process-card'));
     let currentIndex = totalOrig; // start at 4 (first card of middle set)
     let isTransitioning = false;
+    let transitionSafetyTimer = null;
     let autoplayTimer = null;
     let isPaused = false;
+    let resumeAutoplayTimer = null;
 
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     let reducedMotion = reducedMotionQuery.matches;
@@ -655,26 +657,19 @@ if (processAnimated.length && 'IntersectionObserver' in window) {
     }
 
     function getMetrics() {
-        const cardWidth = allCards[0].offsetWidth;
+        const cardWidth = allCards[0].offsetWidth || 310;
         const style = window.getComputedStyle(track);
         const gap = parseFloat(style.columnGap || style.gap) || 24;
         return { cardWidth, gap, step: cardWidth + gap };
     }
 
-    function updatePosition(animate = true) {
+    function calculateTargetX(idx) {
         const { cardWidth, step } = getMetrics();
         const stageWidth = stage.clientWidth;
-        // Center the active card in the stage
-        const targetX = (stageWidth - cardWidth) / 2 - (currentIndex * step);
+        return (stageWidth - cardWidth) / 2 - (idx * step);
+    }
 
-        if (animate && !reducedMotion) {
-            track.style.transition = 'transform 800ms cubic-bezier(0.25, 1, 0.5, 1)';
-        } else {
-            track.style.transition = 'none';
-        }
-        track.style.transform = 'translate3d(' + targetX + 'px, 0, 0)';
-
-        // Update active classes
+    function updateClassesAndDots() {
         allCards.forEach((c, idx) => {
             if (idx === currentIndex) {
                 c.classList.add('is-active');
@@ -685,13 +680,11 @@ if (processAnimated.length && 'IntersectionObserver' in window) {
             }
         });
 
-        // Update dots
         const realIndex = ((currentIndex % totalOrig) + totalOrig) % totalOrig;
         dots.forEach((dot, i) => {
             dot.setAttribute('aria-selected', i === realIndex ? 'true' : 'false');
         });
 
-        // Update accessibility status
         if (status) {
             const activeCard = allCards[currentIndex];
             const title = activeCard ? activeCard.querySelector('h3') : null;
@@ -699,9 +692,8 @@ if (processAnimated.length && 'IntersectionObserver' in window) {
         }
     }
 
-    // Handle seamless wrapping when transition completes
-    track.addEventListener('transitionend', (e) => {
-        if (e.target !== track) return;
+    function handleWrap() {
+        clearTimeout(transitionSafetyTimer);
         isTransitioning = false;
         if (currentIndex >= totalOrig * 2) {
             currentIndex -= totalOrig;
@@ -710,40 +702,100 @@ if (processAnimated.length && 'IntersectionObserver' in window) {
             currentIndex += totalOrig;
             updatePosition(false);
         }
+    }
+
+    function updatePosition(animate = true) {
+        const targetX = calculateTargetX(currentIndex);
+
+        if (animate && !reducedMotion) {
+            track.style.transition = 'transform 650ms cubic-bezier(0.25, 1, 0.5, 1)';
+            isTransitioning = true;
+            clearTimeout(transitionSafetyTimer);
+            transitionSafetyTimer = setTimeout(handleWrap, 700);
+        } else {
+            track.style.transition = 'none';
+            isTransitioning = false;
+            clearTimeout(transitionSafetyTimer);
+        }
+        track.style.transform = 'translate3d(' + Math.round(targetX) + 'px, 0, 0)';
+
+        updateClassesAndDots();
+    }
+
+    ['transitionend', 'webkitTransitionEnd'].forEach(evt => {
+        track.addEventListener(evt, e => {
+            if (e.target !== track) return;
+            handleWrap();
+        });
+    });
+    track.addEventListener('transitioncancel', () => {
+        clearTimeout(transitionSafetyTimer);
+        isTransitioning = false;
     });
 
     function nextSlide() {
-        if (isTransitioning) return;
-        isTransitioning = true;
+        clearTimeout(transitionSafetyTimer);
         currentIndex++;
         updatePosition(true);
     }
 
     function prevSlide() {
-        if (isTransitioning) return;
-        isTransitioning = true;
+        clearTimeout(transitionSafetyTimer);
         currentIndex--;
         updatePosition(true);
     }
 
     function goToRealIndex(targetRealIndex) {
-        if (isTransitioning) return;
+        clearTimeout(transitionSafetyTimer);
         const currentReal = ((currentIndex % totalOrig) + totalOrig) % totalOrig;
         const diff = targetRealIndex - currentReal;
         if (diff === 0) return;
-        isTransitioning = true;
         currentIndex += diff;
         updatePosition(true);
     }
 
-    if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); restartAutoplay(); });
-    if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); restartAutoplay(); });
+    function scheduleResume(delay = 4000) {
+        clearTimeout(resumeAutoplayTimer);
+        resumeAutoplayTimer = setTimeout(() => {
+            isPaused = false;
+            startAutoplay();
+        }, delay);
+    }
+
+    function onPrev(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        isPaused = true;
+        prevSlide();
+        scheduleResume();
+    }
+
+    function onNext(e) {
+        if (e) { e.preventDefault(); e.stopPropagation(); }
+        isPaused = true;
+        nextSlide();
+        scheduleResume();
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', onPrev);
+        prevBtn.addEventListener('touchend', onPrev);
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', onNext);
+        nextBtn.addEventListener('touchend', onNext);
+    }
 
     dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => { goToRealIndex(i); restartAutoplay(); });
+        const onDot = e => {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            isPaused = true;
+            goToRealIndex(i);
+            scheduleResume();
+        };
+        dot.addEventListener('click', onDot);
+        dot.addEventListener('touchend', onDot);
     });
 
-    // Autoplay: 4s interval
     function startAutoplay() {
         stopAutoplay();
         if (reducedMotion) return;
@@ -761,12 +813,6 @@ if (processAnimated.length && 'IntersectionObserver' in window) {
         }
     }
 
-    function restartAutoplay() {
-        stopAutoplay();
-        startAutoplay();
-    }
-
-    // Pause on hover, focus, touch
     carousel.addEventListener('mouseenter', () => { isPaused = true; });
     carousel.addEventListener('mouseleave', () => { isPaused = false; });
     carousel.addEventListener('focusin', () => { isPaused = true; });
@@ -774,61 +820,98 @@ if (processAnimated.length && 'IntersectionObserver' in window) {
 
     document.addEventListener('visibilitychange', () => {
         isPaused = document.hidden;
+        if (!document.hidden) startAutoplay(); else stopAutoplay();
     });
 
-    // Touch swipe support
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let isSwiping = false;
-    let gestureLockedHorizontal = false;
+    // Touch & Swipe with real-time drag feedback on iOS / Android
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let isTracking = false;
+    let isDragging = false;
+    let baseTargetX = 0;
+    let startTime = 0;
 
-    stage.addEventListener('touchstart', e => {
+    function onTouchStart(e) {
         if (e.touches.length !== 1) return;
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        isSwiping = true;
-        gestureLockedHorizontal = false;
+        isTracking = true;
+        isDragging = false;
         isPaused = true;
-    }, { passive: true });
+        stopAutoplay();
+        clearTimeout(resumeAutoplayTimer);
+        clearTimeout(transitionSafetyTimer);
 
-    // Not passive: once horizontal intent is confirmed we call preventDefault()
-    // so the browser's own touch-action:pan-y gesture never steals the sequence
-    // (which otherwise fires touchcancel and leaves the carousel stuck paused).
-    stage.addEventListener('touchmove', e => {
-        if (!isSwiping || e.touches.length !== 1) return;
-        const deltaX = e.touches[0].clientX - touchStartX;
-        const deltaY = e.touches[0].clientY - touchStartY;
-        if (!gestureLockedHorizontal && Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
-            gestureLockedHorizontal = true;
-        }
-        if (gestureLockedHorizontal) {
-            e.preventDefault();
-        }
-    }, { passive: false });
-
-    function resetSwipeState() {
-        isSwiping = false;
-        gestureLockedHorizontal = false;
-        isPaused = false;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentX = startX;
+        currentY = startY;
+        startTime = Date.now();
+        baseTargetX = calculateTargetX(currentIndex);
     }
 
-    // Safety net: if the browser still claims the gesture (e.g. a diagonal
-    // swipe it reads as a vertical pan), touchend never fires — only
-    // touchcancel does. Without this the carousel would stay paused forever.
-    stage.addEventListener('touchcancel', resetSwipeState, { passive: true });
+    function onTouchMove(e) {
+        if (!isTracking || e.touches.length !== 1) return;
+        currentX = e.touches[0].clientX;
+        currentY = e.touches[0].clientY;
+        const diffX = currentX - startX;
+        const diffY = currentY - startY;
 
-    stage.addEventListener('touchend', e => {
-        if (!isSwiping) return;
-        const wasHorizontal = gestureLockedHorizontal;
-        resetSwipeState();
-        const deltaX = e.changedTouches[0].clientX - touchStartX;
-        if (wasHorizontal && Math.abs(deltaX) > 35) {
-            if (deltaX < 0) nextSlide(); else prevSlide();
+        if (!isDragging) {
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 8) {
+                isDragging = true;
+                stage.classList.add('is-dragging');
+            } else if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 8) {
+                isTracking = false;
+                return;
+            }
         }
-        restartAutoplay();
+
+        if (isDragging) {
+            if (e.cancelable) e.preventDefault();
+            track.style.transition = 'none';
+            track.style.transform = 'translate3d(' + Math.round(baseTargetX + diffX) + 'px, 0, 0)';
+        }
+    }
+
+    function onTouchEnd() {
+        if (!isTracking && !isDragging) return;
+        const wasDragging = isDragging;
+        isTracking = false;
+        isDragging = false;
+        stage.classList.remove('is-dragging');
+
+        if (wasDragging) {
+            const diffX = currentX - startX;
+            const elapsed = Date.now() - startTime;
+            const velocity = Math.abs(diffX) / Math.max(elapsed, 1);
+            const threshold = 40;
+
+            if (Math.abs(diffX) > threshold || velocity > 0.25) {
+                if (diffX < 0) {
+                    nextSlide();
+                } else {
+                    prevSlide();
+                }
+            } else {
+                updatePosition(true);
+            }
+        }
+
+        scheduleResume();
+    }
+
+    stage.addEventListener('touchstart', onTouchStart, { passive: true });
+    stage.addEventListener('touchmove', onTouchMove, { passive: false });
+    stage.addEventListener('touchend', onTouchEnd, { passive: true });
+    stage.addEventListener('touchcancel', () => {
+        isTracking = false;
+        isDragging = false;
+        stage.classList.remove('is-dragging');
+        updatePosition(true);
+        scheduleResume();
     }, { passive: true });
 
-    // Handle window resize
     let resizeTimer = null;
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
@@ -837,7 +920,6 @@ if (processAnimated.length && 'IntersectionObserver' in window) {
         }, 100);
     });
 
-    // Initial render
     updatePosition(false);
     startAutoplay();
 })();
