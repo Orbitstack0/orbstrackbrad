@@ -1,4 +1,4 @@
-// ============================================
+﻿// ============================================
 // BRADESCON SUL INVESTIMENTOS - SCRIPTS
 // ============================================
 
@@ -1385,7 +1385,7 @@ if (simulationForm) {
         const mode = data.get('modalidade') === 'parcela' ? 'parcela' : 'credito';
         const amountLabel = mode === 'parcela' ? 'Parcela desejada' : 'Crédito desejado';
         const message = `Olá, gostaria de solicitar uma simulação pela Bradescon Sul.\n\nCategoria: ${categoryLabels[data.get('categoria')]}\nSimular por: ${modeLabels[mode]}\n${amountLabel}: ${data.get('credito')}\nNome: ${data.get('nome')}\nWhatsApp: ${data.get('whatsapp')}\nE-mail: ${data.get('email')}\nCidade/UF: ${data.get('cidade') || 'Não informado'}`;
-        window.location.href = `https://wa.me/5551980886484?text=${encodeURIComponent(message)}`;
+        window.location.href = `https://wa.me/5551926366454?text=${encodeURIComponent(message)}`;
     });
 
     if (selectedCategory && queryMode && prefilledValue > 0) showStep(2);
